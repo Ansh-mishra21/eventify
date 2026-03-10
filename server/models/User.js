@@ -1,11 +1,42 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    role: { type: String, enum: ['user', 'admin'], default: 'user' },
-    isVerified: { type: Boolean, default: false }
-}, { timestamps: true });
+// User schema defines how user data will be stored in MongoDB
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
 
-module.exports = mongoose.model('User', userSchema);
+    email: {
+      type: String,
+      required: true,
+      unique: true, // prevents duplicate accounts
+      lowercase: true,
+      trim: true,
+    },
+
+    password: {
+      type: String,
+      required: true, // password will be stored after hashing
+    },
+
+    // Role helps differentiate between normal user and admin
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+
+    // Used for OTP verification after signup
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  // Automatically adds createdAt and updatedAt
+  { timestamps: true },
+);
+
+module.exports = mongoose.model("User", userSchema);
