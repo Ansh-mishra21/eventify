@@ -146,7 +146,7 @@ const EventDetail = () => {
         key: "rzp_test_SOqY0dkiZ0CgUr",
         amount: data.amount,
         currency: data.currency,
-        name: "Eventora",
+        name: "Eventify",
         description: event.title,
         order_id: data.id,
 

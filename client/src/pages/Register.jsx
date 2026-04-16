@@ -38,178 +38,160 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-      <div className="flex w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden">
-        {/* LEFT SIDE */}
+    <div className="min-h-screen w-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-purple-100 via-pink-100 to-purple-200">
+      {/* Pink glow background */}
+      <div className="absolute w-[700px] h-[700px] bg-pink-400 opacity-30 blur-[200px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute w-[600px] h-[600px] bg-purple-400 opacity-30 blur-[180px] rounded-full top-[40%] left-[40%]"></div>
+      {/* BACK HOME */}
 
-        <div className="hidden md:flex w-1/2 bg-gradient-to-br from-purple-700 via-purple-600 to-pink-600 text-white flex-col items-center justify-center p-12">
-          <h1 className="text-5xl font-bold mb-6">Eventify</h1>
+      <Link
+        to="/"
+        className="absolute top-8 left-8 text-gray-700 hover:text-purple-600 font-medium"
+      >
+        ← Back to Home
+      </Link>
 
-          <p className="text-lg text-center max-w-md opacity-90 mb-10">
-            Create, manage, and elevate your events with powerful tools and
-            seamless collaboration.
-          </p>
+      {/* AUTH CARD */}
 
-          <div className="flex gap-4 text-sm">
-            <span className="bg-white/20 px-4 py-2 rounded-full">
-              10K+ Events
-            </span>
+      <div className="relative w-full max-w-md bg-white/80 backdrop-blur-xl border border-white/40 shadow-lg rounded-3xl p-10">
+        {/* LOGO */}
 
-            <span className="bg-white/20 px-4 py-2 rounded-full">
-              500+ Organizers
-            </span>
+        <h1 className="text-4xl font-bold text-center mb-2 eventify-gradient-text">
+          Eventify
+        </h1>
 
-            <span className="bg-white/20 px-4 py-2 rounded-full">
-              4.9★ Rating
-            </span>
-          </div>
-        </div>
+        <p className="text-center text-gray-500 text-sm mb-6">
+          Create your account to start exploring events
+        </p>
 
-        {/* RIGHT SIDE */}
+        {/* GOOGLE BUTTON */}
 
-        <div className="w-full md:w-1/2 p-10 flex items-center">
-          <div className="w-full max-w-md mx-auto">
-            {/* TOGGLE */}
+        {!showOTP && (
+          <>
+            <button
+              type="button"
+              className="w-full flex items-center justify-center gap-3 border border-gray-200 bg-white hover:bg-gray-50 transition py-3 rounded-xl font-medium shadow-sm"
+            >
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                className="w-5 h-5"
+                alt="google"
+              />
+              Continue with Google
+            </button>
 
-            <div className="flex justify-center mb-8">
-              <div className="flex items-center gap-2 bg-white/70 backdrop-blur-md border border-gray-200 p-1.5 rounded-full shadow-md">
-                {/* Sign In */}
-
-                <Link
-                  to="/login"
-                  className="px-6 py-2 rounded-full font-medium text-gray-600 hover:text-white hover:bg-gradient-to-r from-purple-600 to-pink-500 transition"
-                >
-                  Sign In
-                </Link>
-
-                {/* Sign Up */}
-
-                <Link
-                  to="/register"
-                  className="px-6 py-2 rounded-full font-medium text-gray-600 hover:text-white hover:bg-gradient-to-r from-purple-600 to-pink-500 transition"
-                >
-                  Sign Up
-                </Link>
-              </div>
+            <div className="flex items-center my-5">
+              <div className="flex-1 h-px bg-gray-200"></div>
+              <span className="px-3 text-gray-400 text-sm">or</span>
+              <div className="flex-1 h-px bg-gray-200"></div>
             </div>
+          </>
+        )}
 
-            <h2 className="text-3xl font-bold mb-2 eventify-gradient-text">
-              Create your account
-            </h2>
-
-            <p className="text-gray-500 mb-6">
-              Join Eventify to start creating events
-            </p>
-
-            {error && (
-              <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {!showOTP ? (
-                <>
-                  <input
-                    type="text"
-                    placeholder="Full Name"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
-                  />
-
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
-                  />
-
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
-                  />
-
-                  {/* ROLE SELECTOR */}
-
-                  <div>
-                    <p className="text-sm text-gray-500 mb-3">
-                      I want to join as
-                    </p>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div
-                        onClick={() => setRole("user")}
-                        className={`border rounded-xl p-5 cursor-pointer text-center transition ${
-                          role === "user"
-                            ? "border-purple-600 bg-purple-50"
-                            : "border-gray-200 hover:border-purple-400"
-                        }`}
-                      >
-                        <h3 className="font-semibold">Attendee</h3>
-
-                        <p className="text-sm text-gray-500">
-                          Browse & join events
-                        </p>
-                      </div>
-
-                      <div
-                        onClick={() => setRole("admin")}
-                        className={`border rounded-xl p-5 cursor-pointer text-center transition ${
-                          role === "admin"
-                            ? "border-purple-600 bg-purple-50"
-                            : "border-gray-200 hover:border-purple-400"
-                        }`}
-                      >
-                        <h3 className="font-semibold">Organizer</h3>
-
-                        <p className="text-sm text-gray-500">
-                          Create & manage events
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <input
-                  type="text"
-                  placeholder="Enter OTP"
-                  required
-                  maxLength="6"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-center font-bold tracking-widest focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
-                />
-              )}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-lg font-semibold hover:opacity-90 transition"
-              >
-                {loading
-                  ? "Processing..."
-                  : showOTP
-                    ? "Verify OTP"
-                    : "Create Account"}
-              </button>
-            </form>
-
-            <p className="text-sm text-gray-500 mt-6 text-center">
-              Already have an account?{" "}
-              <Link to="/login" className="text-purple-600 font-semibold">
-                Sign in
-              </Link>
-            </p>
+        {error && (
+          <div className="bg-red-100 text-red-600 text-sm p-3 rounded mb-4">
+            {error}
           </div>
-        </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {!showOTP ? (
+            <>
+              <input
+                type="text"
+                placeholder="Full Name"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+              />
+
+              <input
+                type="email"
+                placeholder="Email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+              />
+
+              <input
+                type="password"
+                placeholder="Password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+              />
+
+              {/* ROLE SELECT */}
+
+              <div>
+                <p className="text-sm text-gray-500 mb-2">I want to join as</p>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div
+                    onClick={() => setRole("user")}
+                    className={`cursor-pointer rounded-xl p-4 border text-center transition ${
+                      role === "user"
+                        ? "border-purple-500 bg-purple-50"
+                        : "border-gray-200 hover:border-purple-400"
+                    }`}
+                  >
+                    <h3 className="font-semibold">Attendee</h3>
+                    <p className="text-xs text-gray-500">Browse events</p>
+                  </div>
+
+                  <div
+                    onClick={() => setRole("admin")}
+                    className={`cursor-pointer rounded-xl p-4 border text-center transition ${
+                      role === "admin"
+                        ? "border-purple-500 bg-purple-50"
+                        : "border-gray-200 hover:border-purple-400"
+                    }`}
+                  >
+                    <h3 className="font-semibold">Organizer</h3>
+                    <p className="text-xs text-gray-500">Create events</p>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            // OTP INPUT
+
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              required
+              maxLength="6"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-center tracking-widest font-bold focus:ring-2 focus:ring-purple-500 focus:outline-none"
+            />
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="gradient-btn w-full bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 text-white font-semibold py-3 rounded-xl hover:scale-[1.03] transition shadow-lg"
+          >
+            {loading
+              ? "Processing..."
+              : showOTP
+                ? "Verify OTP"
+                : "Create Account"}
+          </button>
+        </form>
+
+        <p className="text-sm text-gray-500 mt-6 text-center">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="font-semibold text-purple-600 hover:underline"
+          >
+            Sign in
+          </Link>
+        </p>
       </div>
     </div>
   );

@@ -60,104 +60,139 @@ const Home = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      {/* ================= HERO SECTION ================= */}
-      {/* Main landing hero with background image + gradient overlay */}
-      <div className="relative bg-black text-white rounded-3xl overflow-hidden mb-16 shadow-2xl">
-        {/* Background Image */}
-        <div
-          className="absolute inset-0 opacity-40 
-  bg-[url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=3000&auto=format&fit=crop')]
-  bg-cover bg-center"
-        ></div>
+     {/* Hero Section */}
+{/* ================= HERO SECTION ================= */}
+{/* Main landing hero with background image + gradient overlay */}
 
-        {/* Dark gradient overlay to improve text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/70 to-black"></div>
+<div className="relative text-white rounded-3xl overflow-hidden mb-16 shadow-2xl min-h-[85vh] flex items-center justify-center">
 
-        {/* Content Container */}
-        <div className="relative p-10 md:p-24 text-center flex flex-col items-center z-10">
-          {/* Small label badge */}
-          <span className="bg-white/10 backdrop-blur-md px-5 py-2 rounded-full text-xs font-semibold tracking-widest uppercase border border-white/20 mb-6">
-            Welcome to Eventify
-          </span>
+  {/* Background Image */}
+  <div
+    className="absolute inset-0 
+    bg-[url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=3000&auto=format&fit=crop')]
+    bg-cover bg-center bg-no-repeat"
+  ></div>
 
-          {/* Main heading */}
-          <h1 className="text-5xl md:text-7xl font-black leading-tight mb-6 tracking-tight">
-            Find Your Next <br />
-            {/* Gradient highlighted word */}
-            <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-              Unforgettable Experience
-            </span>
-          </h1>
+  {/* Purple Pink Lighting Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-r from-purple-900/50 via-purple-700/30 to-pink-500/40"></div>
 
-          {/* Subtitle */}
-          <p className="text-gray-300 text-lg md:text-xl mb-10 max-w-2xl font-light">
-            Discover the best tech conferences, music festivals and workshops
-            happening near you.
-          </p>
+  {/* Extra radial spotlight glow */}
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.15),transparent_60%)]"></div>
 
-          {/* ================= SEARCH BAR ================= */}
-          {/* Glassmorphism search box */}
-          <div
-            className="w-full max-w-2xl mx-auto backdrop-blur-lg 
-    bg-white/10 border border-white/20 rounded-full flex items-center px-4 py-2 shadow-lg"
-          >
-            <FaSearch className="text-gray-300 ml-2 mr-3" />
+  {/* Dark overlay for readability */}
+  <div className="absolute inset-0 bg-black/35"></div>
 
-            <input
-              type="text"
-              placeholder="Search events by title..."
-              className="flex-1 bg-transparent text-white placeholder-gray-300 outline-none px-2 py-3"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+  {/* Content Container */}
+  <div className="relative p-10 md:p-24 text-center flex flex-col items-center z-10">
 
-            {/* Search Button */}
-            <button
-              className="bg-gradient-to-r from-purple-500 to-pink-500 
-      px-5 py-2 rounded-full text-sm font-semibold hover:scale-105 transition"
-            >
-              Search
-            </button>
-          </div>
+    {/* Small label badge */}
+    <span className="bg-white/10 backdrop-blur-md px-5 py-2 rounded-full text-xs font-semibold tracking-widest uppercase border border-white/20 mb-6 shadow-md">
+      Welcome to Eventify
+    </span>
 
-          {/* ================= CTA BUTTONS ================= */}
-          <div className="flex gap-4 mt-8">
-            <Link
-              to="/events"
-              className="px-6 py-3 border border-white rounded-full hover:bg-white hover:text-black transition"
-            >
-              Explore Events
-            </Link>
+    {/* Main heading */}
+    <h1 className="text-5xl md:text-7xl font-black leading-tight mb-6 tracking-tight drop-shadow-xl">
+      Find Your Next <br />
 
-            <button
-              onClick={handleDashboard}
-              className="px-6 py-3 border border-white rounded-full hover:bg-white hover:text-black transition"
-            >
-              My Dashboard
-            </button>
-          </div>
+      {/* Gradient highlighted word */}
+      <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-pink-500 bg-clip-text text-transparent">
+        Unforgettable Experience
+      </span>
+    </h1>
 
-          {/* ================= STATS ================= */}
-          {/* Floating stat cards for platform credibility */}
-          <div className="flex gap-6 mt-12 flex-wrap justify-center">
-            <div className="bg-white/10 backdrop-blur-md px-6 py-4 rounded-xl border border-white/10">
-              <h3 className="text-3xl font-bold">500+</h3>
-              <p className="text-gray-300 text-sm">Events Hosted</p>
-            </div>
+    {/* Subtitle */}
+    <p className="text-gray-200 text-lg md:text-xl mb-10 max-w-2xl font-light">
+      Discover the best tech conferences, music festivals and workshops
+      happening near you.
+    </p>
 
-            <div className="bg-white/10 backdrop-blur-md px-6 py-4 rounded-xl border border-white/10">
-              <h3 className="text-3xl font-bold">10K+</h3>
-              <p className="text-gray-300 text-sm">Tickets Sold</p>
-            </div>
+    {/* ================= SEARCH BAR ================= */}
+    {/* Premium glass search box */}
 
-            <div className="bg-white/10 backdrop-blur-md px-6 py-4 rounded-xl border border-white/10">
-              <h3 className="text-3xl font-bold">200+</h3>
-              <p className="text-gray-300 text-sm">Organizers</p>
-            </div>
-          </div>
-        </div>
+    <div
+      className="w-full max-w-2xl mx-auto backdrop-blur-xl 
+      bg-white/10 border border-white/30 rounded-full flex items-center 
+      px-4 py-2 shadow-[0_15px_50px_rgba(236,72,153,0.35)]"
+    >
+      <FaSearch className="text-gray-200 ml-2 mr-3" />
+
+      <input
+        type="text"
+        placeholder="Search events, workshops, concerts..."
+        className="flex-1 bg-transparent text-white placeholder-gray-300 outline-none px-2 py-3"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      {/* Search Button */}
+      <button
+        className="bg-gradient-to-r from-purple-500 to-pink-500 
+        px-6 py-2 rounded-full text-sm font-semibold 
+        hover:scale-105 transition shadow-lg"
+      >
+        Search
+      </button>
+    </div>
+
+    {/* ================= CTA BUTTONS ================= */}
+
+    <div className="flex gap-4 mt-8">
+
+      <Link
+        to="/events"
+        className="px-7 py-3 rounded-full 
+        bg-black/70 border border-white/40
+        hover:bg-white hover:text-black 
+        transition shadow-lg"
+      >
+        Explore Events
+      </Link>
+
+      <button
+        onClick={handleDashboard}
+        className="px-7 py-3 rounded-full 
+        bg-gradient-to-r from-purple-500 to-pink-500 
+        hover:scale-105 transition shadow-[0_8px_25px_rgba(236,72,153,0.4)]"
+      >
+        My Dashboard
+      </button>
+
+    </div>
+
+    {/* ================= STATS ================= */}
+    {/* Floating stat cards for platform credibility */}
+
+    <div className="flex gap-6 mt-12 flex-wrap justify-center">
+
+      <div className="bg-white/10 backdrop-blur-lg px-6 py-4 rounded-xl border border-white/20 shadow-lg">
+        <h3 className="text-3xl font-bold">500+</h3>
+        <p className="text-gray-200 text-sm">Events Hosted</p>
       </div>
+
+      <div className="bg-white/10 backdrop-blur-lg px-6 py-4 rounded-xl border border-white/20 shadow-lg">
+        <h3 className="text-3xl font-bold">10K+</h3>
+        <p className="text-gray-200 text-sm">Tickets Sold</p>
+      </div>
+
+      <div className="bg-white/10 backdrop-blur-lg px-6 py-4 rounded-xl border border-white/20 shadow-lg">
+        <h3 className="text-3xl font-bold">20+</h3>
+        <p className="text-gray-200 text-sm">Organizers</p>
+      </div>
+
+      <div className="bg-white/10 backdrop-blur-lg px-6 py-4 rounded-xl border border-white/20 shadow-lg">
+        <h3 className="text-3xl font-bold">100+</h3>
+        <p className="text-gray-200 text-sm">Happy Attendees</p>
+      </div>
+
+      <div className="bg-white/10 backdrop-blur-lg px-6 py-4 rounded-xl border border-white/20 shadow-lg">
+        <h3 className="text-3xl font-bold">50+</h3>
+        <p className="text-gray-200 text-sm">Cities Covered</p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
 
       {/* Features */}
       {/* ================= FEATURES SECTION ================= */}

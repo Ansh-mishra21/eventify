@@ -2,11 +2,15 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../utils/axios";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 
 const Login = () => {
   // Login states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // Show/hide password
+  const [showPassword, setShowPassword] = useState(false);
 
   // OTP login verification (account verification)
   const [otp, setOtp] = useState("");
@@ -28,6 +32,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   // ================= LOGIN HANDLER =================
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -40,6 +45,7 @@ const Login = () => {
       if (!showOTP) {
         data = await login(email, password);
       }
+
       // If account needs OTP verification
       else {
         data = await verifyOTP(email, otp);
@@ -75,12 +81,11 @@ const Login = () => {
         email: fpEmail,
       });
 
-      alert(data.message); // show success message
+      alert(data.message);
 
-      setFpStep(2); // move to OTP step
+      setFpStep(2);
     } catch (err) {
       console.error(err);
-
       alert(err.response?.data?.message || "Server error");
     }
   };
@@ -96,10 +101,8 @@ const Login = () => {
 
       alert("Password reset successful");
 
-      // Close modal
       setShowForgot(false);
 
-      // Reset modal states
       setFpStep(1);
       setFpEmail("");
       setFpOtp("");
@@ -110,140 +113,186 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-      <div className="flex w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden">
-        {/* LEFT PANEL */}
-        {/* Branding + platform description */}
+    // ================= AUTH PAGE BACKGROUND =================
 
-        <div className="hidden md:flex w-1/2 bg-gradient-to-br from-purple-700 via-purple-600 to-pink-600 text-white flex-col items-center justify-center p-12">
-          <h1 className="text-5xl font-bold mb-6">Eventify</h1>
+    <div className="relative z-10 min-h-screen w-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-purple-100 via-pink-100 to-purple-200">
 
-          <p className="text-lg text-center max-w-md opacity-90 mb-10">
-            Create, manage, and elevate your events with powerful tools and
-            seamless collaboration.
-          </p>
+      {/* BACK TO HOME BUTTON */}
 
-          <div className="flex gap-4 text-sm">
-            <span className="bg-white/20 px-4 py-2 rounded-full">
-              10K+ Events
-            </span>
+      <div className="absolute top-6 left-6">
+        <Link
+          to="/"
+          className="flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-gray-200 shadow-sm text-gray-600 hover:text-purple-600 hover:shadow-md transition"
+        >
+          <ArrowLeft size={18} />
+          Back to Home
+        </Link>
+      </div>
 
-            <span className="bg-white/20 px-4 py-2 rounded-full">
-              500+ Organizers
-            </span>
+      {/* ================= AUTH CARD ================= */}
 
-            <span className="bg-white/20 px-4 py-2 rounded-full">
-              4.9★ Rating
-            </span>
+      <div className="relative w-full max-w-md bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-10 shadow-[0px_10px_30px_rgba(0,0,0,0.1)]">
+
+        {/* LOGO */}
+
+        <h1 className="text-4xl font-bold text-center mb-2 eventify-gradient-text">
+          Eventify
+        </h1>
+
+        <p className="text-center text-gray-500 text-sm mb-6">
+          Sign in to manage your events
+        </p>
+
+        {/* GOOGLE LOGIN BUTTON */}
+
+        {!showOTP && (
+          <>
+            <button
+              type="button"
+              className="w-full flex items-center justify-center gap-3 border border-gray-200 bg-white hover:bg-gray-50 transition py-3 rounded-xl font-medium shadow-sm"
+            >
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                className="w-5 h-5"
+                alt="google"
+              />
+              Continue with Google
+            </button>
+
+            {/* divider */}
+
+            <div className="flex items-center my-5">
+              <div className="flex-1 h-px bg-gray-200"></div>
+
+              <span className="px-3 text-gray-400 text-sm">or</span>
+
+              <div className="flex-1 h-px bg-gray-200"></div>
+            </div>
+          </>
+        )}
+
+        {/* ERROR MESSAGE */}
+
+        {error && (
+          <div className="bg-red-100 text-red-600 text-sm p-3 rounded mb-4">
+            {error}
           </div>
-        </div>
+        )}
 
-        {/* RIGHT PANEL */}
-        {/* Login form */}
+        {/* ================= LOGIN FORM ================= */}
 
-        <div className="w-full md:w-1/2 p-10 flex items-center">
-          <div className="w-full max-w-md mx-auto">
-            <h2 className="text-3xl font-bold mb-2 eventify-gradient-text">Welcome back</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
 
-            <p className="text-gray-500 mb-8">Sign in to manage your events</p>
+          {!showOTP ? (
+            <>
+              <input
+                type="email"
+                placeholder="Email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+              />
 
-            {error && (
-              <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm">
-                {error}
-              </div>
-            )}
-
-            {/* LOGIN FORM */}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {!showOTP ? (
-                <>
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
-                  />
-
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
-                  />
-                </>
-              ) : (
-                // OTP input if account verification required
+              <div className="relative">
                 <input
-                  type="text"
-                  placeholder="Enter OTP"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
                   required
-                  maxLength="6"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-center font-bold tracking-widest focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 pr-12 focus:ring-2 focus:ring-purple-500 focus:outline-none"
                 />
-              )}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-lg font-semibold hover:opacity-90 transition"
-              >
-                {loading
-                  ? "Processing..."
-                  : showOTP
-                    ? "Verify OTP & Login"
-                    : "Sign In"}
-              </button>
-            </form>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-purple-600 transition"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </>
+          ) : (
 
-            {/* Forgot password button */}
-            <p className="text-sm text-gray-500 mt-2 text-right">
-              <button
-                onClick={() => setShowForgot(true)}
-                className="text-purple-600"
-              >
-                Forgot Password?
-              </button>
-            </p>
+            // OTP input if account verification required
 
-            <p className="text-sm text-gray-500 mt-6 text-center">
-              Don't have an account?{" "}
-              <Link to="/register" className="text-purple-600 font-semibold">
-                Sign up
-              </Link>
-            </p>
-          </div>
-        </div>
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              required
+              maxLength="6"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-center font-bold tracking-widest focus:ring-2 focus:ring-purple-500 focus:outline-none"
+            />
+          )}
+
+          {/* SUBMIT BUTTON */}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-purple-600 via-pink-500 to-purple-500 text-white font-semibold py-3 rounded-xl shadow-md hover:scale-[1.02] transition"
+          >
+            {loading
+              ? "Processing..."
+              : showOTP
+              ? "Verify OTP & Login"
+              : "Sign In"}
+          </button>
+
+        </form>
+
+        {/* Forgot password button */}
+
+        <p className="text-sm text-gray-500 mt-2 text-right">
+          <button
+            onClick={() => setShowForgot(true)}
+            className="text-purple-600"
+          >
+            Forgot Password?
+          </button>
+        </p>
+
+        {/* Signup redirect */}
+
+        <p className="text-sm text-gray-500 mt-6 text-center">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="font-semibold text-purple-600 hover:underline"
+          >
+            Sign up
+          </Link>
+        </p>
+
       </div>
 
       {/* ================= FORGOT PASSWORD MODAL ================= */}
 
       {showForgot && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
           <div className="bg-white rounded-xl p-8 w-full max-w-md shadow-xl">
-            <h2 className="text-xl font-bold mb-4 eventify-gradient-text">Reset Password</h2>
+
+            <h2 className="text-xl font-bold mb-4 eventify-gradient-text">
+              Reset Password
+            </h2>
 
             {fpStep === 1 && (
               <>
-                {/* Email input for reset OTP */}
-
                 <input
                   type="email"
                   placeholder="Enter your email"
                   value={fpEmail}
                   onChange={(e) => setFpEmail(e.target.value)}
-                  className="w-full border p-3 rounded-lg mb-4 filter focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
+                  className="w-full border p-3 rounded-lg mb-4 focus:ring-2 focus:ring-purple-500 outline-none"
                 />
 
                 <button
                   onClick={sendResetOTP}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-lg"
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-lg hover:scale-[1.02] transition"
                 >
                   Send OTP
                 </button>
@@ -252,16 +301,12 @@ const Login = () => {
 
             {fpStep === 2 && (
               <>
-                {/* OTP verification */}
-
                 <input
                   placeholder="Enter OTP"
                   value={fpOtp}
                   onChange={(e) => setFpOtp(e.target.value)}
                   className="w-full border p-3 rounded-lg mb-3"
                 />
-
-                {/* New password */}
 
                 <input
                   type="password"
@@ -273,7 +318,7 @@ const Login = () => {
 
                 <button
                   onClick={resetPassword}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-lg"
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-2 rounded-lg hover:scale-[1.02] transition"
                 >
                   Reset Password
                 </button>
@@ -286,7 +331,9 @@ const Login = () => {
             >
               Cancel
             </button>
+
           </div>
+
         </div>
       )}
     </div>
