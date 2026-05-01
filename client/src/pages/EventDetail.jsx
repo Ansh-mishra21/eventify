@@ -23,6 +23,13 @@ const EventDetail = () => {
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState(false);
 
+  // ================= Event Expiry Check =================
+
+  //  check if event is in past
+  const isEventExpired = (date) => {
+    return new Date() > new Date(date);
+  };
+
   /* Reviews state */
 
   const [reviews, setReviews] = useState([]);
@@ -127,19 +134,30 @@ const EventDetail = () => {
     }
   };
 
-  /* ================= Razorpay Payment ================= */
+  // ================= Razorpay Payment =================
 
   const handlePayment = async () => {
+    // ❌ Not logged in → redirect
     if (!user) {
       navigate("/login");
       return;
     }
 
+    // ❌ Event expired check (frontend safety)
+    if (isEventExpired(event.date)) {
+      alert("This event has already ended. Registration closed.");
+      return;
+    }
+
     try {
+      //  prevent double click
+      if (paymentLoading) return;
+
       setPaymentLoading(true);
 
+      //  IMPORTANT: only send eventId (NOT amount)
       const { data } = await api.post("/payments/create-order", {
-        amount: event.ticketPrice,
+        eventId: event._id,
       });
 
       const options = {
@@ -150,15 +168,57 @@ const EventDetail = () => {
         description: event.title,
         order_id: data.id,
 
+        // SUCCESS HANDLER
         handler: async function (response) {
-          const bookingRes = await api.post("/bookings/payment-booking", {
-            eventId: event._id,
-            paymentId: response.razorpay_payment_id,
-          });
+          try {
+            // ✅ STEP 1: VERIFY
+            await api.post("/payments/verify", {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              paymentId: data.paymentId,
+              eventId: event._id,
+            });
 
-          const booking = bookingRes.data.booking;
+            // ✅ STEP 2: BOOKING
+            const bookingRes = await api.post("/bookings/payment-booking", {
+              eventId: event._id,
+              paymentId: response.razorpay_payment_id,
+            });
 
-          navigate(`/ticket/${booking._id}`);
+            navigate(`/ticket/${bookingRes.data.booking._id}`);
+          } catch (err) {
+            console.error("ERROR:", err);
+
+            try {
+              // 🔥 STEP 3: RECOVERY FLOW (VERY IMPORTANT)
+
+              // 👉 directly check booking (instead of retry spam)
+              const res = await api.get(`/bookings/my-bookings`);
+
+              // find this event booking
+              const booking = res.data.find((b) => b.event === event._id);
+
+              if (booking) {
+                // ✅ already booked → redirect
+                navigate(`/ticket/${booking._id}`);
+                return;
+              }
+
+              // ❌ no booking found
+              alert(
+                "Payment successful but booking not found. Please contact support.",
+              );
+            } catch (recoveryErr) {
+              console.error("RECOVERY FAILED:", recoveryErr);
+
+              alert(
+                "Payment received but confirmation pending. Please check My Bookings.",
+              );
+            }
+          } finally {
+            setPaymentLoading(false);
+          }
         },
 
         theme: {
@@ -169,7 +229,7 @@ const EventDetail = () => {
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error) {
-      console.error(error);
+      alert(error.response?.data?.message || "Payment failed");
     } finally {
       setPaymentLoading(false);
     }
@@ -451,9 +511,11 @@ const EventDetail = () => {
             >
               {paymentLoading
                 ? "Processing..."
-                : isSoldOut
-                  ? "Sold Out"
-                  : "Book Ticket"}
+                : isEventExpired(event.date)
+                  ? "Event Ended"
+                  : isSoldOut
+                    ? "Sold Out"
+                    : "Book Ticket"}
             </button>
           </div>
         </div>
